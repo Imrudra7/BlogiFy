@@ -8,7 +8,8 @@ WORKDIR /app
 COPY mvnw .
 COPY .mvn .mvn
 COPY pom.xml .
-
+# mvnw ko executable bana do
+RUN chmod +x mvnw
 # Download dependencies (cache layer)
 RUN ./mvnw dependency:go-offline
 
