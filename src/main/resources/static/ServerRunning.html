@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blogify - Server Running</title>
+    <style>
+        /* A simple, modern reset */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        /* --- Main Body and Layout --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+            background-color: #f0f2f5; /* A soft, light gray background */
+            color: #1c1e21;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        /* --- Content Container --- */
+        .container {
+            background-color: #ffffff;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            max-width: 650px;
+            width: 90%;
+            border: 1px solid #ddd;
+        }
+
+        /* --- Typography --- */
+        h1 {
+            color: #2c3e50;
+            font-size: clamp(2rem, 5vw, 2.8rem); /* Responsive font size */
+            margin: 0 0 0.5rem 0;
+        }
+
+        /* --- Status Indicator --- */
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #2ecc71; /* A vibrant green */
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            background-color: rgba(46, 204, 113, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+        }
+
+        .status::before {
+            content: '';
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #2ecc71;
+            /* Simple pulsing animation for the "live" indicator */
+            animation: pulse 2s infinite;
+        }
+
+        p {
+            color: #555;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        /* --- Data Display Section --- */
+        .data-section {
+            text-align: left;
+            margin-top: 2rem;
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .data-section h3 {
+            margin-top: 0;
+            color: #34495e;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        /* --- Code Block for JSON --- */
+        pre {
+            white-space: pre-wrap;       /* Since CSS 2.1 */
+            word-wrap: break-word;     /* Internet Explorer 5.5+ */
+            background-color: #2d2d2d; /* Dark background for code */
+            color: #f8f8f2;            /* Light text for contrast */
+            padding: 1rem;
+            border-radius: 6px;
+            font-family: "Fira Code", "Courier New", Courier, monospace;
+            font-size: 0.95rem;
+        }
+
+        /* Basic JSON syntax highlighting */
+        .json-key    { color: #8be9fd; }
+        .json-string { color: #f1fa8c; }
+        .json-number { color: #bd93f9; }
+        .json-boolean{ color: #ff79c6; }
+        .json-array  { color: #a1f1a1; }
+
+        /* --- Animation --- */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(46, 204, 113, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Blogify Server</h1>
+    <p class="status">Live</p>
+    <p>The backend API is active and ready to serve requests. You can now connect your client application.</p>
+
+    <div class="data-section">
+        <h3>Sample API Status</h3>
+        <pre><code>{
+    <span class="json-key">"status"</span>: <span class="json-string">"success"</span>,
+    <span class="json-key">"message"</span>: <span class="json-string">"Welcome to the Blogify API!"</span>,
+    <span class="json-key">"serviceHealth"</span>: <span class="json-string">"OK"</span>,
+    <span class="json-key">"active"</span>: <span class="json-boolean">true</span>,
+    <span class="json-key">"timestamp"</span>: <span class="json-number">1723700887</span>,
+    <span class="json-key">"available_endpoints"</span>: [
+        <span class="json-array">"/api/posts"</span>,
+        <span class="json-array">"/api/users"</span>,
+        <span class="json-array">"/api/comments"</span>
+    ]
+}</code></pre>
+    </div>
+</div>
+
+</body>
+</html>
