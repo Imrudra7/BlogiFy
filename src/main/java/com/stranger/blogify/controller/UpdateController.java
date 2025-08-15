@@ -24,7 +24,7 @@ public class UpdateController {
     @PutMapping("/update-post")
     public ResponseEntity<ApiResponse> updatePost (@RequestBody Post post){
         String newValue = post.getContent();
-        System.out.println(newValue);
+
         if(newValue==null) {
             ApiResponse successResponse = new ApiResponse("Content found empty.");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(successResponse);

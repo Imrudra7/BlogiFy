@@ -15,7 +15,7 @@ public class UpdateService {
     }
 
     public boolean updatePost(String newValue, String id) {
-        System.out.println("Inside Sevice: "+newValue+" "+id);
+
         Optional<Post> optionalPost = postRepository.findById(id);
         if(optionalPost.isPresent()) {
             Post newPost = optionalPost.get();
