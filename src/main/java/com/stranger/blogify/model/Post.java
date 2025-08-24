@@ -13,6 +13,7 @@ public class Post {
     private String slug;
     private String content;
     private String author;
+    private String authorId;
     private List<String> tags;
     private String status; // PUBLISHED | DRAFT
     private Instant createdAt;
@@ -89,8 +90,11 @@ public class Post {
         this.author = author;
     }
 
+    public String getAuthorId() {
+        return authorId;
+    }
 
-
-
-
+    public void setAuthorId(String authorId) {
+        this.authorId = authorId;
+    }
 }
