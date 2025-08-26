@@ -27,7 +27,7 @@ public class AccountController {
         return new ResponseEntity<>(new ApiResponse("User already registered with this email."), HttpStatusCode.valueOf(409));
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     ResponseEntity<ApiResponse> login (@RequestBody User user) {
         User loginUser = accountService.login(user);
         if(loginUser == null) {
