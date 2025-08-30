@@ -19,7 +19,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())  // new recommended way
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/account/**", "/api/posts/**","/index.html","/api/newPosts/**").permitAll()
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/**", "/index.html").permitAll()
                         .anyRequest().authenticated()
                 ); // basic auth enable
 
