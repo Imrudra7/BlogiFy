@@ -1,7 +1,10 @@
 package com.stranger.blogify.controller;
 
 import com.stranger.blogify.common.ApiResponse;
+import com.stranger.blogify.config.JwtTokenProvider;
 import com.stranger.blogify.model.Question;
+import com.stranger.blogify.model.User;
+import com.stranger.blogify.service.AccountService;
 import com.stranger.blogify.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +21,12 @@ public class QuestionController {
 
     @Autowired
     QuestionService questionService;
+
+    @Autowired
+    AccountService accountService;
+
+    @Autowired
+    JwtTokenProvider jwtTokenProvider;
 
     @GetMapping("/loadAllQuestions")
     ResponseEntity<List<Question>> loadAllQuestions () {
@@ -55,33 +64,34 @@ public class QuestionController {
             );
         }
         List<Question> created= questionService.addQuestion(questionList);
-        if(created!=null)
-        return new ResponseEntity<>(
-                new ApiResponse("Questions created successfully.",created,true),
-                HttpStatus.CREATED
-        );
+        if(created!=null) {
+            return new ResponseEntity<>(
+                    new ApiResponse("Questions created successfully.", created, true),
+                    HttpStatus.CREATED
+            );
+        }
          return new ResponseEntity<>(
                 new ApiResponse("Something went wrong.",null,false),
                 HttpStatus.BAD_REQUEST
         );
     }
     @PatchMapping("/updateSelection")
-    ResponseEntity<ApiResponse> doneQuestion (@RequestBody Question question) {
+    ResponseEntity<ApiResponse> doneQuestion (@RequestBody User user) {
 
-        if (question == null || question.getId() == null || question.getId().trim().isEmpty()) {
+        if (user == null || user.getEmail() == null || user.getEmail().trim().isEmpty()) {
             return new ResponseEntity<>(
-                    new ApiResponse("Question id is empty or invalid."),
+                    new ApiResponse("User data is empty or invalid."),
                     HttpStatus.BAD_REQUEST
             );
         }
 
-        Question newQuestion = questionService.questionDone(question);
-        if (newQuestion != null) {
+        User newUser = accountService.questionDone(user);
+        if (newUser != null) {
             return new ResponseEntity<>(
-                    newQuestion.isDone() ?
-                    new ApiResponse("Well done!! 💥💥 " + newQuestion.getName() + " done successfully.✅",newQuestion,true):
-                            new ApiResponse("Next time achhe se try karna bhai..🥲!!"),
-                    HttpStatus.valueOf(200)
+                    newUser.getAddOrRemove() != null && newUser.getAddOrRemove().equals("Add")
+                            ? new ApiResponse("Well done!! 💥💥 " + newUser.getName() + " done successfully.✅", newUser, true)
+                            : new ApiResponse("Next time achhe se try karna bhai..🥲!!", newUser, true),
+                    HttpStatus.OK
             );
         } else {
             return new ResponseEntity<>(
@@ -90,4 +100,24 @@ public class QuestionController {
             );
         }
     }
+    @GetMapping("/getUserSelections")
+    public ResponseEntity<ApiResponse> getUserSelections(
+            @RequestHeader("Authorization") String authHeader) {
+
+        // authHeader => "Bearer <token>"
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiResponse("Token missing or invalid"));
+        }
+
+        String token = authHeader.substring(7); // "Bearer " remove
+
+        String email = jwtTokenProvider.extractUsername(token);
+
+        // Ab email se database fetch kar sakte ho
+        List<String> selections =  accountService.getUserSelections(email);
+
+        return ResponseEntity.ok(new ApiResponse("Success", selections, true));
+    }
+
 }

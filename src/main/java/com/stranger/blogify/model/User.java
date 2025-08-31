@@ -1,8 +1,10 @@
 package com.stranger.blogify.model;
 
-import org.springframework.data.annotation.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import org.springframework.data.annotation.Id;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class User {
@@ -12,11 +14,54 @@ public class User {
     private String name;
 
     private String email;
+
+    @JsonIgnore
     private String password;
 
     private String status; // Active | Slept
     private Instant createdAt;
     private Instant updatedAt;
+
+    private List<String> questionsDone;
+    private String questionToBeAddedOrRemoved;
+    private String AddOrRemove;
+
+    private AuthProvider authProvider;
+    private LocalDateTime lastLogin;
+    private String role;
+    private String provider;
+    private boolean active;
+    public User(String email, String name) {
+    }
+    public User (){};
+
+    public String getQuestionToBeAddedOrRemoved() {
+        return questionToBeAddedOrRemoved;
+    }
+
+    public void setQuestionToBeAddedOrRemoved(String questionToBeAddedOrRemoved) {
+        this.questionToBeAddedOrRemoved = questionToBeAddedOrRemoved;
+    }
+
+    public String isQuestionAdded() {
+        return AddOrRemove;
+    }
+
+    public void setAddOrRemove(String addOrRemove) {
+        this.AddOrRemove = addOrRemove;
+    }
+
+    public String getAddOrRemove() {
+        return AddOrRemove;
+    }
+
+    public List<String> getQuestionsDone() {
+        return questionsDone;
+    }
+
+    public void setQuestionsDone(List<String> questionsDone) {
+        this.questionsDone = questionsDone;
+    }
 
     public String getId() {
         return id;
@@ -72,5 +117,45 @@ public class User {
 
     public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public AuthProvider getAuthProvider() {
+        return authProvider;
+    }
+
+    public void setAuthProvider(AuthProvider authProvider) {
+        this.authProvider = authProvider;
+    }
+
+    public void setLastLogin(LocalDateTime lastLogin) {
+        this.lastLogin=lastLogin;
+    }
+
+    public LocalDateTime getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
+
+    public String getProvider() {
+        return provider;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 }

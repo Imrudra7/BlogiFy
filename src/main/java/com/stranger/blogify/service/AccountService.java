@@ -2,6 +2,7 @@ package com.stranger.blogify.service;
 
 import com.stranger.blogify.common.GlobalMethods;
 import com.stranger.blogify.model.User;
+import com.stranger.blogify.repository.QuestionRepository;
 import com.stranger.blogify.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,6 +12,8 @@ import java.time.Instant;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,6 +26,8 @@ public class AccountService {
 
     @Autowired
     GlobalMethods globalMethods;
+    @Autowired
+    private QuestionRepository questionRepository;
 
     public AccountService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -64,5 +69,39 @@ public class AccountService {
             return null;
         }
         return dbUser;
+    }
+
+    public User questionDone(User user) {
+        Optional<User> optionalUser = userRepository.findByEmail(user.getEmail());
+        if(optionalUser.isEmpty()) {
+            return null;
+        } else {
+            User updatedUser = optionalUser.get();
+
+            List<String> questionsDone = updatedUser.getQuestionsDone();
+            if(questionsDone != null) {
+                if (!questionsDone.contains(user.getQuestionToBeAddedOrRemoved()) && user.getAddOrRemove().equals( "Add")) {
+                    questionsDone.add(user.getQuestionToBeAddedOrRemoved());
+                } else if (questionsDone.contains(user.getQuestionToBeAddedOrRemoved()) && user.getAddOrRemove().equals( "Remove")) {
+                    questionsDone.remove(user.getQuestionToBeAddedOrRemoved());
+                }
+            } else {
+                questionsDone = new ArrayList<>();
+                if ( user.getAddOrRemove().equals( "Add")) {
+                    questionsDone.add(user.getQuestionToBeAddedOrRemoved());
+                }
+            }
+            updatedUser.setQuestionsDone(questionsDone);
+
+            updatedUser.setAddOrRemove(user.getAddOrRemove());
+            userRepository.save(updatedUser);
+
+            return updatedUser;
+        }
+    }
+
+    public List<String> getUserSelections(String email) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        return optionalUser.map(User::getQuestionsDone).orElse(null);
     }
 }
