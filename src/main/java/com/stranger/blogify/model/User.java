@@ -1,7 +1,8 @@
 package com.stranger.blogify.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -15,7 +16,7 @@ public class User {
 
     private String email;
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     private String status; // Active | Slept

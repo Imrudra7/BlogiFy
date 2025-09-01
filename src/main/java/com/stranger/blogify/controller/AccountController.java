@@ -1,8 +1,10 @@
 package com.stranger.blogify.controller;
 
 import com.stranger.blogify.common.ApiResponse;
+import com.stranger.blogify.config.JwtTokenProvider;
 import com.stranger.blogify.model.User;
 import com.stranger.blogify.service.AccountService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,8 +12,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/account")
 public class AccountController {
-
+    @Autowired
     private final AccountService accountService;
+    @Autowired
+    private JwtTokenProvider tokenProvider;
 
     public AccountController(AccountService accountService) {
         this.accountService = accountService;
@@ -33,6 +37,7 @@ public class AccountController {
         if(loginUser == null) {
             return new ResponseEntity<>(new ApiResponse("Wrong email or password."), HttpStatusCode.valueOf(404));
         }
-        return new ResponseEntity<> (new ApiResponse("Welcome "+loginUser.getName()+"!!"),HttpStatusCode.valueOf(200));
+        String token = tokenProvider.generateToken(loginUser.getEmail());
+        return new ResponseEntity<> (new ApiResponse("Welcome "+loginUser.getName()+"!!",token,true),HttpStatusCode.valueOf(200));
     }
 }
