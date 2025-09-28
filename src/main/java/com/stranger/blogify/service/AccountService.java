@@ -5,6 +5,7 @@ import com.stranger.blogify.model.User;
 import com.stranger.blogify.repository.QuestionRepository;
 import com.stranger.blogify.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.aggregation.DateOperators;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,6 +70,11 @@ public class AccountService {
         if (!isPasswordMatched) {
             return null;
         }
+        List<Date> logDays = dbUser.getLoggedInDays();
+        if (null == logDays) logDays = new ArrayList<>();
+        logDays.add(new Date());
+        dbUser.setLoggedInDays(logDays);
+        userRepository.save(dbUser);
         return dbUser;
     }
 
@@ -103,5 +110,17 @@ public class AccountService {
     public List<String> getUserSelections(String email) {
         Optional<User> optionalUser = userRepository.findByEmail(email);
         return optionalUser.map(User::getQuestionsDone).orElse(null);
+    }
+
+    public List<Date> getStreakDays(User user) {
+        List<Date> streaks = new ArrayList<>();
+        if (!user.getEmail().isEmpty()) {
+            Optional <User> optional = userRepository.findByEmail(user.getEmail());
+            if (optional.isPresent()){
+                streaks = optional.get().getLoggedInDays();
+                return streaks;
+            }
+        }
+        return streaks;
     }
 }

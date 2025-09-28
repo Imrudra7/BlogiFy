@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -119,5 +121,17 @@ public class QuestionController {
 
         return ResponseEntity.ok(new ApiResponse("Success", selections, true));
     }
-
+    @PostMapping("/getStreakDays")
+    ResponseEntity<ApiResponse> getStreakDays (@RequestBody User user) {
+        List<Date> loginDays = new ArrayList<>();
+        if(user != null && user.getEmail() != null){
+            loginDays = accountService.getStreakDays(user);
+        }
+        if (loginDays==null || loginDays.isEmpty())
+            return new ResponseEntity<>(new ApiResponse("Never logged in."), HttpStatusCode.valueOf(200));
+        else {
+            return new ResponseEntity<>(new ApiResponse("Keep maintaining your streaks.", loginDays,
+                    Boolean.TRUE),HttpStatusCode.valueOf(200));
+        }
+    }
 }

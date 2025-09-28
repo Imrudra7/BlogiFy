@@ -17,8 +17,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 
 import java.time.ZoneId;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
@@ -53,6 +52,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         // This is fine for updating the last login time
         user.setLastLogin(LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault()));
+        List<Date> logDays = user.getLoggedInDays();
+        if(null == logDays) logDays = new ArrayList<>();
+        logDays.add(new Date());
+        user.setLoggedInDays(logDays);
 
         userRepository.save(user);
 

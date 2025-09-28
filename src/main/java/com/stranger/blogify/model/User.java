@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 public class User {
@@ -32,6 +33,7 @@ public class User {
     private String role;
     private String provider;
     private boolean active;
+    private List<Date> loggedInDays;
     public User(String email, String name) {
     }
     public User (){};
@@ -158,5 +160,13 @@ public class User {
 
     public boolean isActive() {
         return active;
+    }
+
+    public List<Date> getLoggedInDays() {
+        return loggedInDays;
+    }
+
+    public void setLoggedInDays(List<Date> loggedInDays) {
+        this.loggedInDays = loggedInDays;
     }
 }
